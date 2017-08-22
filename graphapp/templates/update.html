@@ -1,0 +1,99 @@
+{% extends "base.html" %}
+
+    {% block content %}
+        <div class="col-md-6 col-md-offset-3">
+            <div class="panel panel-default">
+              <div class="panel-body">
+                <table class="table table-striped" id="update-table">
+                  <tr>
+                    <td>Updated till</td>
+                    <td>{{timestamp__max}}</td> 
+                  </tr>
+                  <tr>
+                    <td>Updated since</td>
+                    <td>{{timestamp__min}}</td> 
+                  </tr>
+                  <tr>
+                    <td>Number Of Posts</td>
+                    <td>{{id__count}}</td> 
+                  </tr>
+                  <tr>
+                    <td>Photos</td>
+                    <td>{{image_url__count}}</td> 
+                  </tr>
+                  <tr>
+                    <td>Stories</td>
+                    <td>{{story__count}}</td> 
+                  </tr>
+                  <tr>
+                    <td>Public Posts</td>
+                    <td>{{privacy_public__count}}</td> 
+                  </tr>
+                  <tr>
+                    <td>Friends Post</td>
+                    <td>{{privacy_friends__count}}</td> 
+                  </tr>
+                  <tr>
+                    <td>Custom Post</td>
+                    <td>{{privacy_graph__count}}</td> 
+                  </tr>
+                </table> 
+                <span>
+                    <button onclick="updateBtn()" id="updateBtn" class="center-block btn btn-default btn-lg"> 
+                      <i class="fa fa-cloud-download"></i> Update
+                    </button>  
+                    <span id="updateId" class="pull-right"></span>  
+                </span>                
+              </div>
+            </div>
+        </div>
+        <script type="text/javascript">
+           $(".nav").find(".active").removeClass("active");
+           $('#update').addClass("active");
+           
+           var nextPost = function(argument, count) {
+                $.ajax({
+                    url: "update-stuffs",
+                    type: "GET",
+                    data: {
+                        "next_url":argument,
+                    },
+                    success: function(data){
+                        console.log(count)
+                        console.log(data)
+                        if(data !==null){
+                          if (data["next"] && data["next"] !==null ) {
+                              $("#updateId").html(data['id'].substr(0, 25) + "...");
+                              nextPost(data["next"], count + 1)
+                          }
+                        }
+                        else{
+                          $("#updateBtn").removeClass("disabled");
+                          $("#updateBtn").html('<i class="fa fa-cloud-download"></i> Update');
+                          $("#updateId").html("");
+                        }
+                    },  
+                    failure: function(data){
+                        console.log(data)
+                    }
+                });    
+            }
+           var updateBtn = function() {
+            $("#updateBtn").addClass("disabled");
+            $("#updateBtn").html('<i class="fa fa-circle-o-notch fa-spin fa-fw"></i> Updating');
+            $.ajax({
+              'url':'update-stuffs',
+              'type':'GET',
+              'success':function(data){
+                console.log(data);
+                $("#updateId").html(data['id'].substr(0, 15) + "...")
+                if (data["next"] !==null)
+                  nextPost(data["next"], 1)
+              },
+              'failure':function(data){
+                console.log(data);
+              }
+            });
+           }
+        </script>
+    {% endblock %}

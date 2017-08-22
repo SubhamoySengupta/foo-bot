@@ -1,0 +1,177 @@
+{% extends "base.html" %}
+
+    {% block content %}
+        {% load staticfiles %}
+        <div class="col-md-6 col-md-offset-3">
+ 
+            <div class="panel panel-default">
+              <div class="panel-body" id="post-body" style="padding:0">
+                <div id="carousel-example-generic" class="carousel slide" data-ride="carousel">
+                  
+                  {% if medialen > 1 %}
+                  <!-- Indicators -->
+                  <ol class="carousel-indicators">
+                    {% for video_item in video_items %}
+                      <li data-target="#carousel-example-generic" data-slide-to="{{ forloop.counter0 }}" class="ci"></li>
+                    {% endfor %}
+                    {% for image_item in image_items %}
+                      <li data-target="#carousel-example-generic" data-slide-to="{{ forloop.counter0 }}" class="ci"></li>
+                    {% endfor %}
+                  </ol>
+                  {% endif %}
+
+                  <!-- Wrapper for slides -->
+                  <div class="carousel-inner" role="listbox">
+                  {% for video_item in video_items %}
+                        <div class="item adc">
+                          <div>
+                            {% if video_item.vid_type == "video" %}
+                            <video class="center-block" controls>
+                              <source src="{{video_item.video_url}}">
+                            Your browser does not support the video tag.
+                            </video>
+                            {% endif %}
+                            {% if video_item.vid_type == "gif" %}
+                            <video autoplay loop class="center-block">
+                              <source src="{{video_item.video_url}}">
+                            Your browser does not support the video tag.
+                            </video>                  
+                            {% endif %}          
+                            <div class="carousel-caption">
+                              <a href="{{video_item.target_url}}" target="_blank" style="color:#3b5998;font-weight:500;font-size:20px"> <i class="fa fa-facebook-square" style="color:#3b5998"></i> Link </a> 
+                            </div>
+                          </div>
+                        </div>
+                  {% endfor %}
+                  {% for image_item in image_items %}
+                        <div class="item adc">
+                          <div>
+                            <img class="image-responsive center-block" src="{{image_item.image_url}} " alt="...">
+                            <div class="carousel-caption">
+                              <a href="{{image_item.target_url}}" target="_blank" style="color:#3b5998;font-weight:500;font-size:20px"> <i class="fa fa-facebook-square" style="color:#3b5998"></i> Link </a> 
+                            </div>
+                          </div>
+                        </div>
+                  {% endfor %}
+                  </div>
+
+                  <!-- Controls -->
+                  {% if medialen > 1 %}
+                  <a class="left carousel-control" href="#carousel-example-generic" role="button" data-slide="prev">
+                    <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+                    <span class="sr-only">Previous</span>
+                  </a>
+                  <a class="right carousel-control" href="#carousel-example-generic" role="button" data-slide="next">
+                    <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+                    <span class="sr-only">Next</span>
+                  </a>
+                  {% endif %}
+                </div>
+              </div>
+              <div class="panel-footer">
+              <div class="row">
+                      <div class="col-md-10 col-md-offset-1">
+                        <br>
+                        <b>
+                          <p><span class="pull-right">
+                           <i class="fa fa-clock-o"></i> {{post.timestamp}}
+                          </span>
+                          </p>
+                          <p>Status Type: <i class="{{post.status_type}}"></i></p>
+                          
+                          <p><span class="pull-right">
+                             <i class="fa fa-link"></i> 
+                              <a href="{{post.other_urls}}" target="_blank">{{post.other_urls|truncatechars:26}}</a>
+                          </span>
+                          </p>
+
+                          <p>Privacy: <i class="{{post.privacy}}"></i></p>
+                          <br>
+                        </b>
+                        <p id="post">{{post.message}}</p>
+                        <br>
+                        <a href="comment?id={{post.id}}" target="_blank"><button class="btn btn-primary btn-sm pull-right">Comment</button></a>
+                        <br>
+                        <table id="comment-table" class="table display" width="100%">
+                            <thead>
+                              <tr>
+                                <th>
+                                  <b>
+                                    <p>Comments:</p>
+                                  </b>
+                                </th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                            {% for comment in comments %}
+                            <tr>
+                                <td class="comments">
+                                  <b>
+                                    <p>
+                                      <i class="fa fa-user"></i> 
+                                       {{comment.commenter_id}}
+                                      <span class="pull-right">
+                                        <i class="fa fa-clock-o"></i> {{comment.timestamp}}
+                                      </span>
+                                    </p>
+                                  </b>
+                                  {{comment.message}}
+                                
+                                {% if comment.media_url %}
+                                {% if comment.comment_type == "video_inline" %}
+                                <div>
+                                  <br>
+                                  <video class="center-block" controls style="width:250px">
+                                    <source src="{{comment.media_url}}">
+                                  Your browser does not support the video tag.
+                                  </video>
+                                </div>
+                                {% endif %}
+
+                                {% if comment.comment_type == "animated_image_video" %}
+                                <div>
+                                  <br>
+                                  <video class="center-block" style="width:250px" autoplay loop controls>
+                                    <source src="{{comment.media_url}}">
+                                  Your browser does not support the video tag.
+                                  </video>
+                                </div>
+                                {% endif %}
+
+                                {% if comment.comment_type == "photo" %}
+                                <div>
+                                  <br>
+                                  <img class="center-block image-responsve" src="{{comment.media_url}}" style="width:250px">
+                                </div>
+                                {% endif %}
+                                
+                                {% endif %}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                            </tbody>      
+                        </table>
+                      </div>
+                </div>
+              </div>
+              </div>
+            </div>
+        </div>
+
+        <script type="text/javascript">
+           $(".nav").find(".active").removeClass("active");
+           $('#home').addClass("active");
+           $(".adc").first().addClass("active");
+           $(".ci").first().addClass("active");
+           $('.carousel').carousel();
+           $("#comment-table").DataTable({ 
+               "bInfo": false,
+               "bFilter": false,
+               "bLengthChange": false
+           });
+
+        </script>
+
+    {% endblock %}
+
+

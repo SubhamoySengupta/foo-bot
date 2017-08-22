@@ -1,0 +1,83 @@
+body{
+    font-family: 'Roboto', sans-serif !important;
+}
+
+.navbar-brand {
+    font-weight: 900;
+    font-size: 25px;
+}
+.navbar-nav {
+    font-weight: 500
+}
+
+.panel-body{
+    font-weight: 300;
+    font-size: 28px;
+}
+
+.sync-post, .sync-photos, .sync-comment{
+    font-weight: 500;
+}
+
+#update-table {
+    font-size: 15px;
+    font-weight: 500;
+}
+
+.foot{
+    bottom: 0;
+    padding: 15px;
+    width: 100%;
+    text-align: center;
+    margin-top: 20px;
+}
+
+.foot span {
+    background: rgba(255,255,255,0.9);
+    padding: 15px;
+}
+
+.carousel-control {
+    height: 0;
+    margin-top: auto;
+    margin-bottom: auto;
+}
+
+.adc {
+    width: 100%;
+    background-color: #222
+}
+.adc div {
+    width: 70%;
+    left: 0;
+    right: 0;
+    margin: auto;
+}
+.adc div:before {
+    content: "";
+    display: block;
+    padding-top: 100%;
+    padding-left: 15%;
+}
+
+.adc div video{
+    max-width: 100% !important;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: auto;
+    height: 100% !important
+}
+
+.adc div img{
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: auto;
+    max-height: 100% !important;
+    max-width: 100%
+}

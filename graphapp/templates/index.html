@@ -1,0 +1,120 @@
+{% extends "base.html" %}
+
+    {% block content %}
+        <div class="col-md-12 col-xs-12 col-sm-12">
+            <table id="main-table" class="table table-striped display text-center" style="font-size:14px" cellspacing="0" width="100%">
+
+            </table>            
+        </div>
+<script type="text/javascript">
+    $(document).ready(function() {
+    var postData = null;
+    $.ajax({
+        url:'load-posts',
+        type:'GET',
+        success:function(data){
+            var d = data["data"]
+            for (var i = 0; i < d.length; i++) {
+                
+                var id = d[i][0];
+                id = '<a href="post/?id=' + id + '" target="_blank">' + id.split("_")[1] + '</a>';
+                
+                var msg = d[i][1];
+                if (msg!==null && msg.length > 100){
+                    msg = msg.substr(0, 100) + " ...";
+                }
+                
+                var story = d[i][2];
+                if (story !==null)  {
+                    story = story.split(" ");
+                    story[0] = "<b>" + story[0] + "</b>";story[1] = "<b>" + story[1] + "</b>";
+                    story = story.join(" ");     
+                }
+                    
+                var privacy = null;
+                
+                if (d[i][3]==0)
+                    privacy = '<i class="fa fa-globe"></i>';
+                if (d[i][3]==1)
+                    privacy = '<i class="fa fa-users"></i>';
+                if (d[i][3]==2)
+                    privacy = '<i class="fa fa-object-group"></i>';
+
+                var status_type = null;
+                if (d[i][4]==0)
+                    status_type = '<i class="fa fa-mobile"></i>';
+                if (d[i][4]==1)
+                    status_type = '<i class="fa fa-picture-o"></i>';
+                if (d[i][4]==2)
+                    status_type = '<i class="fa fa-share-alt"></i>';
+                if (d[i][4]==3)
+                    status_type = '<i class="fa fa-file-video-o"></i>';
+                if (d[i][4]==4)
+                    status_type = '<i class="fa fa-object-ungroup"></i>';
+
+                var other_urls = d[i][5];
+                if (other_urls!==null)
+                    other_urls = '<a href="' + other_urls + '"><i class="fa fa-external-link"></i></a>';
+
+                var timestamp = d[i][6];
+                timestamp = '<i class="fa fa-calendar-o"> ' + timestamp.split(" ")[0] + ' ' +
+                timestamp.split(" ")[1] + ' ' + timestamp.split(" ")[2] + ' ' + timestamp.split(" ")[3] + 
+                '</i><br><i class="fa fa-clock-o"> ' + 
+                timestamp.split(" ")[4] + '</i>';
+
+                d[i][0] = id;
+                d[i][1] = msg;
+                d[i][2] = story;
+                d[i][3] = privacy;
+                d[i][4] = status_type;
+                d[i][5] = other_urls;
+                d[i][6] = timestamp;
+            }
+            console.log(data);
+            $('#main-table').DataTable({
+                data: data["data"],
+                columns: [
+                    { title: "ID" },
+                    { title: "Message" },
+                    { title: "Story" },
+                    { title: "Privacy" },
+                    { title: "StatusType" },
+                    { title: "OtherUrls" },
+                    { title: "TimeStamp" }
+                ],
+                responsive: true,
+                bInfo:false,
+                bLengthChange:false,
+                "order": [[ 0, "desc" ]]
+            });
+
+        },
+        failure:function(data){
+            console.log(data);
+        }
+    })
+    
+} );
+</script>
+<script type="text/javascript">
+   $(".nav").find(".active").removeClass("active");
+   $('#home').addClass("active");
+</script>
+    {% endblock %}
+
+    <!-- 
+                <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>Message</th>
+                        <th>Story</th>
+                        <th>Privacy label</th>
+                        <th>Status Type</th>
+                        <th>Object Id</th>
+                        <th>Image Url</th>
+                        <th>Other Urls</th>
+                        <th>Timestamp</th>
+                    </tr>   
+                </thead>
+
+     -->
