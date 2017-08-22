@@ -1,2 +1,2 @@
 # foo-bot
-Fiddling facebook graph apis
+Fiddling with facebook graph apis
